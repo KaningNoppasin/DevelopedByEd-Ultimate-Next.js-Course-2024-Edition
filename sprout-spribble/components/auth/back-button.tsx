@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface BackButtonType {
-    href: string,
-    label: string
+    href: string;
+    label: string;
 }
 
-export const BackButton = ({href, label} : BackButtonType) => {
+export const BackButton = ({ href, label }: BackButtonType) => {
     return (
-        <div>
-            <Button variant="outline">
+        <div className="flex flex-col items-center w-full gap-4">
+            <Button className="flex w-full gap-4">
                 <Link aria-label={label} href={href}>
                     {label}
                 </Link>
             </Button>
         </div>
     );
-}
+};
