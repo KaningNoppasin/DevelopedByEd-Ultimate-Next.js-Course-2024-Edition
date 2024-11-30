@@ -17,6 +17,10 @@ import { z } from 'zod';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { useAction } from 'next-safe-action/hooks';
+import { emailSignIn } from '@/server/actions/email-sigin';
+import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 export const LoginForm = () => {
     const form = useForm<z.infer<typeof LoginSchema>>({
@@ -26,8 +30,16 @@ export const LoginForm = () => {
             password: '',
         },
     });
+
+    const [error, setError] = useState("")
+
+    const {execute, status} = useAction(emailSignIn, {
+        onSuccess(data){
+            console.log("data",data);
+        }
+    });
     const onsubmit = (values: z.infer<typeof LoginSchema>) => {
-        console.log(values);
+        execute(values)
     };
     return (
         <AuthCard
@@ -43,7 +55,7 @@ export const LoginForm = () => {
                             <FormField
                                 control={form.control}
                                 name="email"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
@@ -63,7 +75,7 @@ export const LoginForm = () => {
                             <FormField
                                 control={form.control}
                                 name="password"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
@@ -86,7 +98,7 @@ export const LoginForm = () => {
                                 </Link>
                             </Button>
                         </div>
-                        <Button type="submit" className="w-full my-2">
+                        <Button type="submit" className={cn('w-full my-2', status === 'executing' ? 'animate-pulse' : "")}>
                             Login
                         </Button>
                     </form>
