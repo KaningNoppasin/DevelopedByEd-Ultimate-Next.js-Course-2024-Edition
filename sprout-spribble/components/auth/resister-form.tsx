@@ -19,6 +19,8 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { RegisterSchema } from '@/types/register-schema';
 import { useState } from 'react';
+import { useAction } from 'next-safe-action/hooks';
+import { emailRegister } from '@/server/actions/emai-register';
 
 export const RegisterForm = () => {
     const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -31,8 +33,17 @@ export const RegisterForm = () => {
     });
     const [error, setError] = useState('');
 
+    const { execute, status } = useAction(emailRegister, {
+        onSuccess(data) {
+            console.log("data",data);
+            // if (data.success) {
+            //     console.log('data.success :', data.success);
+            // }
+        },
+    });
+
     const onsubmit = (values: z.infer<typeof RegisterSchema>) => {
-        console.log(values);
+        execute(values);
     };
     return (
         <AuthCard
@@ -113,9 +124,10 @@ export const RegisterForm = () => {
                         </div>
                         <Button
                             type="submit"
-                            className={
-                                (cn('w-full my-2'))
-                            }
+                            className={cn(
+                                'w-full my-2',
+                                status === 'executing' ? 'animate-pulse' : ''
+                            )}
                         >
                             Register
                         </Button>
