@@ -30,6 +30,7 @@ export const generateEmailVerifyToken = async (email: string) => {
     const verificationToken = await db
         .insert(emailTokens)
         // .values({ email: email, token: token, expires: expires });
-        .values({ email, token, expires });
+        .values({ email, token, expires })
+        .returning();
     return verificationToken;
 };

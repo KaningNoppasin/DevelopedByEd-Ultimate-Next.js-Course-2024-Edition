@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
 import { users } from '@/server/schema';
 import { generateEmailVerifyToken } from './tokens';
+import { sendVerificationEmail } from './email';
 
 const actionClient = createSafeActionClient();
 
@@ -14,7 +15,7 @@ export const emailRegister = actionClient
     .schema(RegisterSchema)
     .action(async ({ parsedInput: { email, password, name } }) => {
         const hashPassword = await bcrypt.hash(password, 10);
-        console.log(email, hashPassword, name);
+        console.log('=> email', email, password, name);
 
         const exitingUser = await db.query.users.findFirst({
             where: eq(users.email, email),
@@ -23,9 +24,12 @@ export const emailRegister = actionClient
         if (exitingUser) {
             if (!exitingUser.emailVerified) {
                 const verificationToken = await generateEmailVerifyToken(email);
-                // await sentVerificationToken();
-
-                return { success: 'Email Confirmation resend' };
+                const response = await sendVerificationEmail(
+                    verificationToken[0].email,
+                    verificationToken[0].token
+                );
+                if (response?.success) return { success: 'Email Confirmation resend' };
+                if (response?.error) return { error: response?.error };
             }
             return { error: 'Email already use' };
         }
@@ -38,6 +42,10 @@ export const emailRegister = actionClient
         });
 
         const verificationToken = await generateEmailVerifyToken(email);
-        // await sentVerificationToken();
-        return { success: 'Confirmation Email Sent!' };
+        const response = await sendVerificationEmail(
+            verificationToken[0].email,
+            verificationToken[0].token
+        );
+        if (response?.success) return { success: 'Confirmation Email Sent!' };
+        if (response?.error) return { error: response?.error };
     });
