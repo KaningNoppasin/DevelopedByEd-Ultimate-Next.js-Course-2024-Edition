@@ -20,9 +20,10 @@ import Link from 'next/link';
 import { useAction } from 'next-safe-action/hooks';
 import { emailSignIn } from '@/server/actions/email-signin';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormSuccess } from './form-success';
 import { FormError } from './form-error';
+import { redirect } from 'next/navigation';
 
 export const LoginForm = () => {
     const form = useForm<z.infer<typeof LoginSchema>>({
@@ -42,6 +43,13 @@ export const LoginForm = () => {
             if (data?.success) setSuccess(data?.success);
         },
     });
+
+    useEffect(() => {
+        if (success === 'User Signed In!') {
+            redirect('/');
+        }
+    }, [success])
+
     const onsubmit = (values: z.infer<typeof LoginSchema>) => {
         execute(values);
     };

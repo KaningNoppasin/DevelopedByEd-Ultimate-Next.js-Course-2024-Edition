@@ -42,7 +42,6 @@ export const emailSignIn = actionClient
 
             // TODO: 2FA
 
-            // FIXME: Can't redirect
             await signIn('credentials', {
                 email,
                 password,
