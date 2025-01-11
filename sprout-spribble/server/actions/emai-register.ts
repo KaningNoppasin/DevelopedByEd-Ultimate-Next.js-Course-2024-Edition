@@ -15,7 +15,6 @@ export const emailRegister = actionClient
     .schema(RegisterSchema)
     .action(async ({ parsedInput: { email, password, name } }) => {
         const hashPassword = await bcrypt.hash(password, 10);
-        console.log('=> email', email, password, name);
 
         const exitingUser = await db.query.users.findFirst({
             where: eq(users.email, email),

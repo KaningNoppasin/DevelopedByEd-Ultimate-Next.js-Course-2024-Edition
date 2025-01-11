@@ -1,9 +1,7 @@
-function NewVerification() {
+import { EmailVerificationForm } from "@/components/auth/email-verification-form";
+
+export default function EmailVerification() {
     return (
-        <div>
-            NewVerification
-        </div>
+        <EmailVerificationForm/>
     );
 }
-
-export default NewVerification;
