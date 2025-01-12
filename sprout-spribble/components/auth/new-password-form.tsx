@@ -17,10 +17,9 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useAction } from 'next-safe-action/hooks';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FormSuccess } from './form-success';
 import { FormError } from './form-error';
-import { redirect } from 'next/navigation';
 import { NewPasswordSchema } from '@/types/new-password-schema';
 import { newPassword } from '@/server/actions/new-password';
 
@@ -29,6 +28,7 @@ export const NewPasswordForm = () => {
         resolver: zodResolver(NewPasswordSchema),
         defaultValues: {
             password: '',
+            confirm_password: '',
         },
     });
 
@@ -41,12 +41,6 @@ export const NewPasswordForm = () => {
             if (data?.success) setSuccess(data?.success);
         },
     });
-
-    useEffect(() => {
-        if (success === 'User Signed In!') {
-            redirect('/');
-        }
-    }, [success]);
 
     const onsubmit = (values: z.infer<typeof NewPasswordSchema>) => {
         execute(values);
@@ -82,13 +76,28 @@ export const NewPasswordForm = () => {
                                     </FormItem>
                                 )}
                             />
+                            <FormField
+                                control={form.control}
+                                name="confirm_password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Confirm Password</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                type="password"
+                                                id="confirm_password"
+                                                placeholder="********"
+                                                autoComplete="current-password"
+                                            />
+                                        </FormControl>
+                                        <FormDescription />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                             <FormSuccess message={success} />
                             <FormError message={error} />
-                            {/* <Button size={'sm'} variant={'link'} asChild>
-                                <Link href={'/auth/reset'}>
-                                    Forgot your password
-                                </Link>
-                            </Button> */}
                         </div>
                         <Button
                             type="submit"
