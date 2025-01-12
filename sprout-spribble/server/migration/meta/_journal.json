@@ -22,6 +22,20 @@
       "when": 1735325138792,
       "tag": "0002_striped_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1736598156814,
+      "tag": "0003_narrow_nick_fury",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1736598925979,
+      "tag": "0004_slim_black_knight",
+      "breakpoints": true
     }
   ]
 }
