@@ -3,6 +3,7 @@
 import { NewPasswordSchema } from '@/types/new-password-schema';
 import { createSafeActionClient } from 'next-safe-action';
 import { db } from '@/server';
+import { dbPool } from '@/server/db/neon-ws';
 import { eq } from 'drizzle-orm';
 import { passwordResetTokens, users } from '@/server/schema';
 import { getPasswordResetTokenByToken } from './tokens';
@@ -37,7 +38,7 @@ export const newPassword = actionClient
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            await db.transaction(async (tx) => {
+            await dbPool.transaction(async (tx) => {
                 await tx
                     .update(users)
                     .set({

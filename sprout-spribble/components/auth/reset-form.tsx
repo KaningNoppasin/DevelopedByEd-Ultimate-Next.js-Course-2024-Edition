@@ -20,38 +20,33 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { FormSuccess } from './form-success';
 import { FormError } from './form-error';
-import { NewPasswordSchema } from '@/types/new-password-schema';
-import { newPassword } from '@/server/actions/new-password';
-import { useSearchParams } from 'next/navigation';
+import { resetPassword } from '@/server/actions/password-reset';
+import { ResetSchema } from '@/types/reset-schema';
 
-export const NewPasswordForm = () => {
-    const token = useSearchParams().get('token');
-
-    const form = useForm<z.infer<typeof NewPasswordSchema>>({
-        resolver: zodResolver(NewPasswordSchema),
+export const ResetForm = () => {
+    const form = useForm<z.infer<typeof ResetSchema>>({
+        resolver: zodResolver(ResetSchema),
         defaultValues: {
-            password: '',
-            confirm_password: '',
-            token: token
+            email: '',
         },
     });
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const { execute, status } = useAction(newPassword, {
+    const { execute, status } = useAction(resetPassword, {
         onSuccess({ data }) {
             if (data?.error) setError(data?.error);
             if (data?.success) setSuccess(data?.success);
         },
     });
 
-    const onsubmit = (values: z.infer<typeof NewPasswordSchema>) => {
+    const onsubmit = (values: z.infer<typeof ResetSchema>) => {
         execute(values);
     };
     return (
         <AuthCard
-            cardTitle="Enter a new password"
+            cardTitle="Forgot your password?"
             backButtonHref="/auth/login"
             backButtonLabel="Back to login"
             showSocials={false}
@@ -62,43 +57,18 @@ export const NewPasswordForm = () => {
                         <div>
                             <FormField
                                 control={form.control}
-                                name="password"
+                                name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Password</FormLabel>
+                                        <FormLabel>Email</FormLabel>
                                         <FormControl>
                                             <Input
                                                 {...field}
-                                                type="password"
-                                                id="password"
-                                                placeholder="********"
-                                                autoComplete="current-password"
-                                                disabled={
-                                                    status === 'executing'
-                                                }
-                                            />
-                                        </FormControl>
-                                        <FormDescription />
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="confirm_password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Confirm Password</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                type="password"
-                                                id="confirm_password"
-                                                placeholder="********"
-                                                autoComplete="current-password"
-                                                disabled={
-                                                    status === 'executing'
-                                                }
+                                                type="email"
+                                                id="email"
+                                                disabled={status === 'executing'}
+                                                placeholder="example@email.com"
+                                                autoComplete="email"
                                             />
                                         </FormControl>
                                         <FormDescription />

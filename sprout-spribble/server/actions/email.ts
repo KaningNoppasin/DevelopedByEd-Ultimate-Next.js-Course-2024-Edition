@@ -18,3 +18,16 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     if (error) return { error: error.message };
     if (data) return { success: data };
 };
+export const sendPasswordResetEmail = async (email: string, token: string) => {
+    const confirmLink = `${domain}/auth/new-password?token=${token}`;
+    const { data, error } = await resend.emails.send({
+        from: 'Acme <onboarding@resend.dev>',
+        to: email,
+        subject: 'Hello world',
+        // react: EmailTemplate({ firstName: 'John' }),
+        html: `<p>CLick here <a href='${confirmLink}'>reset your password</a></p>`,
+    });
+
+    if (error) return { error: error.message };
+    if (data) return { success: data };
+};
