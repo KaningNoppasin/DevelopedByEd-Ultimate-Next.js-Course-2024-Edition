@@ -1,7 +1,7 @@
 'use server';
 import { eq } from 'drizzle-orm';
 import { emailTokens, passwordResetTokens, users } from './../schema';
-import { db } from '@/server';
+import { db } from '@/server/db/neon-http';
 
 const getVerificationTokenByEmail = async (email: string) => {
     try {

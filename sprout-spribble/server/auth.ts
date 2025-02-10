@@ -2,7 +2,7 @@ import Github from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import NextAuth from 'next-auth';
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
-import { db } from '@/server';
+import { db } from '@/server/db/neon-http';
 import Credentials from 'next-auth/providers/credentials';
 import { LoginSchema } from '@/types/login-schema';
 import { eq } from 'drizzle-orm';
@@ -36,7 +36,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
                     if (!user || !user.password) return null;
 
-                    const passwordMatch = await bcrypt.compare(password, user.password);
+                    const passwordMatch = await bcrypt.compare(
+                        password,
+                        user.password
+                    );
                     if (passwordMatch) return user;
                 }
                 return null;

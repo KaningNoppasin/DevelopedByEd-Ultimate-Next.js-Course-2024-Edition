@@ -2,7 +2,7 @@
 
 import { NewPasswordSchema } from '@/types/new-password-schema';
 import { createSafeActionClient } from 'next-safe-action';
-import { db } from '@/server';
+import { db } from '@/server/db/neon-http';
 import { dbPool } from '@/server/db/neon-ws';
 import { eq } from 'drizzle-orm';
 import { passwordResetTokens, users } from '@/server/schema';

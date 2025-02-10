@@ -1,6 +1,6 @@
 'use server';
 
-import { db } from '@/server';
+import { db } from '@/server/db/neon-http';
 import { RegisterSchema } from '@/types/register-schema';
 import { createSafeActionClient } from 'next-safe-action';
 import bcrypt from 'bcrypt';
@@ -27,7 +27,8 @@ export const emailRegister = actionClient
                     verificationToken[0].email,
                     verificationToken[0].token
                 );
-                if (response?.success) return { success: 'Email Confirmation resend' };
+                if (response?.success)
+                    return { success: 'Email Confirmation resend' };
                 if (response?.error) return { error: response?.error };
             }
             return { error: 'Email already use' };

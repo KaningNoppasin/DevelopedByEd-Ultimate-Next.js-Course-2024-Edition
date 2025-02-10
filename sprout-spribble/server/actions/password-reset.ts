@@ -2,7 +2,7 @@
 
 import { ResetSchema } from '@/types/reset-schema';
 import { createSafeActionClient } from 'next-safe-action';
-import { db } from '..';
+import { db } from '../db/neon-http';
 import { eq } from 'drizzle-orm';
 import { users } from '../schema';
 import { generatePasswordResetToken } from './tokens';
